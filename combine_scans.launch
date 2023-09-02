@@ -1,0 +1,34 @@
+<launch>
+  <!-- Launch the first RPLidar node -->
+  <node name="rplidar1" pkg="rplidar_ros" type="rplidarNode" output="screen">
+    <!-- Specify the necessary parameters for the first RPLidar -->
+  </node>
+
+  <!-- Launch the second RPLidar node -->
+  <node name="rplidar2" pkg="rplidar_ros" type="rplidarNode" output="screen">
+    <!-- Specify the necessary parameters for the second RPLidar -->
+  </node>
+
+  <!-- Convert point cloud from the first RPLidar to laser scan -->
+  <node name="pointcloud_to_laserscan1" pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" output="screen">
+    <remap from="cloud_in" to="/rplidar1/point_cloud">
+      <!-- Specify any necessary parameters for the first pointcloud_to_laserscan node -->
+    </remap>
+  </node>
+
+  <!-- Convert point cloud from the second RPLidar to laser scan -->
+  <node name="pointcloud_to_laserscan2" pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" output="screen">
+    <remap from="cloud_in" to="/rplidar2/point_cloud">
+      <!-- Specify any necessary parameters for the second pointcloud_to_laserscan node -->
+    </remap>
+  </node>
+
+  <!-- Combine the laser scan messages from both lidars -->
+  <node name="laser_scan_merger" pkg="your_package" type="your_laser_scan_merger_node" output="screen">
+    <remap from="scan1" to="/pointcloud_to_laserscan1/scan">
+    <remap from="scan2" to="/pointcloud_to_laserscan2/scan">
+  </node>
+
+  <!-- Launch RViz to visualize the combined laser scans -->
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find your_package)/your_rviz_config.rviz"/> -->
+</launch>
